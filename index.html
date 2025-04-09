@@ -1,93 +1,264 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AI Hotel Assistant</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Hotel Assistant</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        #chat-container {
-            width: 80%; /* Make it responsive */
-            max-width: 600px; /* Limit maximum width */
-            margin: 20px auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #e0f7fa;
+      overflow: hidden;
+    }
 
-        #chat-log {
-            height: 400px; /* Increased height */
-            overflow-y: scroll;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 10px;
-            padding: 5px;
-        }
+    /* Background image with hotel/travel theme and an overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1502920514313-52581002a659?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+      opacity: 0.25;
+      z-index: -2;
+      filter: blur(2px);
+    }
 
-        #user-input {
-            width: 70%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+    /* Floating clouds animation */
+    .cloud {
+      position: absolute;
+      top: 10%;
+      width: 200px;
+      height: 100px;
+      background: #ffffffcc;
+      border-radius: 50%;
+      animation: floatClouds 60s linear infinite;
+      z-index: -1;
+    }
 
-        button {
-            width: 25%;
-            padding: 8px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    .cloud::before,
+    .cloud::after {
+      content: '';
+      position: absolute;
+      background: #ffffffcc;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    .cloud::before {
+      top: -30px;
+      left: 30px;
+    }
 
-        .chat-message.user {
-            text-align: right;
-            color: blue;
-        }
+    .cloud::after {
+      top: -20px;
+      right: 30px;
+    }
 
-        .chat-message.ai {
-            text-align: left;
-            color: green;
-        }
-    </style>
+    .cloud:nth-child(1) {
+      top: 20%;
+      left: -200px;
+      animation-duration: 80s;
+    }
+
+    .cloud:nth-child(2) {
+      top: 40%;
+      left: -300px;
+      animation-duration: 100s;
+    }
+
+    @keyframes floatClouds {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(120vw); }
+    }
+
+    /* Chat container styling */
+    #chat-container {
+      width: 95%;
+      max-width: 800px;
+      margin: 5vh auto;
+      background: #ffffffee;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      height: 85vh;
+      backdrop-filter: blur(8px);
+      position: relative;
+      z-index: 1;
+    }
+
+    #chat-header {
+      background: linear-gradient(to right, #ffb5a7, #fcd5ce);
+      color: #fff;
+      padding: 18px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    #chat-log {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      background: #fffaf5;
+      scroll-behavior: smooth;
+    }
+
+    .chat-message {
+      margin-bottom: 12px;
+      max-width: 90%;
+      padding: 12px 18px;
+      border-radius: 20px;
+      line-height: 1.5;
+      font-size: 1rem;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .chat-message.user {
+      background-color: #d0f4de;
+      color: #2d6a4f;
+      align-self: flex-end;
+      text-align: right;
+    }
+
+    .chat-message.ai {
+      background-color: #f1f0f8;
+      color: #3e3c62;
+      align-self: flex-start;
+      text-align: left;
+      white-space: normal;
+    }
+
+    #input-area {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 12px;
+      border-top: 1px solid #eee;
+      background: #fff;
+    }
+
+    #user-input {
+      flex: 1 1 70%;
+      padding: 12px 14px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 1rem;
+    }
+
+    button {
+      flex: 1 1 25%;
+      margin-left: 10px;
+      padding: 12px 20px;
+      background-color: #cdb4db;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #a2d2ff;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #chat-log::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chat-log::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 10px;
+    }
+
+    @media screen and (max-width: 768px) {
+      #chat-container {
+        height: 90vh;
+        margin: 3vh auto;
+      }
+
+      #chat-header {
+        font-size: 1.4rem;
+        padding: 14px;
+      }
+
+      #user-input {
+        flex: 1 1 100%;
+        margin-bottom: 8px;
+      }
+
+      button {
+        flex: 1 1 100%;
+        margin-left: 0;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div id="chat-container">
-        <div id="chat-log"></div>
-        <input type="text" id="user-input">
-        <button onclick="sendMessage()">Send</button>
+  <!-- Floating Clouds -->
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+
+  <div id="chat-container">
+    <div id="chat-header">🏨 AI Hotel Assistant</div>
+    <div id="chat-log"></div>
+    <div id="input-area">
+      <input type="text" id="user-input" placeholder="Ask about hotels, locations, amenities..." onkeypress="if(event.key === 'Enter') sendMessage()">
+      <button onclick="sendMessage()">Send</button>
     </div>
+  </div>
 
-    <script>
-        function sendMessage() {
-            const userInput = document.getElementById('user-input').value;
-            const chatLog = document.getElementById('chat-log');
-            chatLog.innerHTML += `<p class="chat-message user">User: ${userInput}</p>`;
-            document.getElementById('user-input').value = '';
+  <script>
+    function sendMessage() {
+      const userInput = document.getElementById("user-input");
+      const message = userInput.value.trim();
+      if (!message) return;
 
-            fetch('/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ message: userInput })
-            })
-            .then(response => response.json())
-            .then(data => {
-                chatLog.innerHTML += `<p class="chat-message ai">AI: ${data.response}</p>`;
-                chatLog.scrollTop = chatLog.scrollHeight;
-            });
-        }
-    </script>
+      const chatLog = document.getElementById("chat-log");
+      chatLog.innerHTML += `<div class="chat-message user">${message}</div>`;
+      userInput.value = "";
+      chatLog.scrollTop = chatLog.scrollHeight;
+
+      fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        chatLog.innerHTML += `<div class="chat-message ai">${data.response}</div>`;
+        chatLog.scrollTop = chatLog.scrollHeight;
+      })
+      .catch(() => {
+        chatLog.innerHTML += `<div class="chat-message ai">Sorry, something went wrong. Please try again.</div>`;
+        chatLog.scrollTop = chatLog.scrollHeight;
+      });
+    }
+  </script>
 </body>
 </html>
