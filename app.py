@@ -12,12 +12,26 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
 
 def generate_response(prompt):
-    """Generates a response using the Gemini API."""
+    """Generates a response using the Gemini API and formats it into bullet points."""
     try:
         response = model.generate_content(prompt)
-        return response.text
+        text = response.text.strip()
+
+        # Convert numbered list into bullet list using simple parsing
+        lines = text.split('\n')
+        bullet_lines = []
+        for line in lines:
+            if line.strip().startswith(tuple(str(i) + '.' for i in range(1, 10))):
+                # Convert numbered line to bullet point
+                bullet_lines.append(f"<li>{line[line.find('.')+1:].strip()}</li>")
+            else:
+                bullet_lines.append(f"<p>{line}</p>")
+
+        formatted_response = "<ul>" + "".join(bullet_lines) + "</ul>"
+        return formatted_response
     except Exception as e:
-        return f"An error occurred: {e}"
+        return f"<p>Error: {e}</p>"
+
 
 @app.route('/')
 def index():
