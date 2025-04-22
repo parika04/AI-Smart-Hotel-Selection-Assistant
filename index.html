@@ -195,9 +195,13 @@ border-radius: 20px;
  }
 
 @media screen and (max-width: 768px) {
- #chat-container {
- height: 90vh;
+     #chat-container {
+ height: auto; /* Changed to auto */
  margin: 3vh auto;
+ min-height: 80vh; /* Added a minimum height */
+ display: flex;
+ flex-direction: column;
+ justify-content: space-between; /* Added to ensure footer stays at the bottom */
  }
 
  #chat-header {
@@ -213,6 +217,9 @@ border-radius: 20px;
 button {
  flex: 1 1 100%;
  margin-left: 0;
+ }
+ footer{
+ position: relative; /* Changed to relative */
  }
  }
  </style>
@@ -270,7 +277,7 @@ bottom: 0;
  backdrop-filter: blur(6px);
  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.1);
  ">
- © 2025 TripTeddy 🧸 | Crafted with love by Parika and Sneha Shrivastav for smart travelers
+ © 2025 TripTeddy 🧸 | Crafted with love by Parika for smart travelers
  </footer>
 
 </body>
