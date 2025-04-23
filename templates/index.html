@@ -14,8 +14,9 @@
  padding: 0;
  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
  background: #e0f7fa;
- overflow: hidden;
-}
+ overflow-x: hidden; /* ✅ Changed to allow vertical scrolling */
+ min-height: 100vh; /* ✅ Added to allow body to expand */
+ }
 
  /* Background image with hotel/travel theme and an overlay */
  body::before {
@@ -97,7 +98,7 @@
 }
 
  #chat-header {
- background: linear-gradient(to right, #ffb5a7, #d8b4fe); /* Changed to purple */
+ background: linear-gradient(to right, #ffb5a7, #d8b4fe);
  color: #fff;
  padding: 18px;
  font-size: 1.8rem;
@@ -105,13 +106,14 @@
  text-align: center;
  letter-spacing: 1px;
  }
+
  #chat-log {
  flex: 1;
  overflow-y: auto;
  padding: 16px;
  background: #fffaf5;
  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+ -webkit-overflow-scrolling: touch;
  }
 
  .chat-message {
@@ -138,13 +140,14 @@
  text-align: left;
  white-space: normal;
  }
+
  #input-area {
  display: flex;
  flex-wrap: wrap;
  padding: 12px;
  border-top: 1px solid #eee;
  background: #fff;
- border-radius: 0 0 18px 18px; /* Added border-radius to input area */
+ border-radius: 0 0 18px 18px;
  }
 
  #user-input {
@@ -152,25 +155,25 @@
  padding: 12px 14px;
  border: 1px solid #ccc;
  border-radius: 20px;
-font-size: 1rem;
+ font-size: 1rem;
  }
 
  button {
  flex: 1 1 25%;
  margin-left: 10px;
  padding: 12px 20px;
- background-color: #ba68c8; /* Darker shade of purple */
+ background-color: #ba68c8;
  color: #fff;
  border: none;
-border-radius: 20px;
+ border-radius: 20px;
  font-weight: bold;
  font-size: 1rem;
  cursor: pointer;
  transition: background 0.3s ease;
-}
+ }
 
  button:hover {
- background-color: #9c48c1; /* Even darker shade on hover */
+ background-color: #9c48c1;
  }
 
  ul {
@@ -182,27 +185,34 @@ border-radius: 20px;
  margin-bottom: 10px;
  }
 
-@keyframes fadeIn {
+ @keyframes fadeIn {
  from { opacity: 0; transform: translateY(10px); }
  to { opacity: 1; transform: translateY(0); }
  }
 
-#chat-log::-webkit-scrollbar {
+ #chat-log::-webkit-scrollbar {
  width: 6px;
-}
+ }
+
  #chat-log::-webkit-scrollbar-thumb {
  background-color: #ccc;
  border-radius: 10px;
  }
 
-@media screen and (max-width: 768px) {
-     #chat-container {
- height: auto; /* Changed to auto */
+ @media screen and (max-width: 768px) {
+ #chat-container {
+ height: auto;
  margin: 3vh auto;
- min-height: 80vh; /* Added a minimum height */
+ min-height: 80vh;
  display: flex;
  flex-direction: column;
- justify-content: space-between; /* Added to ensure footer stays at the bottom */
+ justify-content: space-between;
+ overflow-y: auto; /* ✅ Added to allow vertical scroll inside chat container */
+ }
+
+ #chat-log {
+ max-height: 50vh; /* ✅ Added to restrict height and prevent overflow */
+ overflow-y: auto; /* ✅ Enables scrolling within chat log */
  }
 
  #chat-header {
@@ -215,12 +225,13 @@ border-radius: 20px;
  margin-bottom: 8px;
  }
 
-button {
+ button {
  flex: 1 1 100%;
  margin-left: 0;
  }
- footer{
- position: relative; /* Changed to relative */
+
+ footer {
+ position: relative;
  }
  }
  </style>
@@ -236,9 +247,9 @@ button {
  <input type="text" id="user-input" placeholder="Ask about hotels, locations, amenities..." onkeypress="if(event.key === 'Enter') sendMessage()">
  <button onclick="sendMessage()">Send</button>
  </div>
-</div>
+ </div>
 
-<script>
+ <script>
  function sendMessage() {
  const userInput = document.getElementById("user-input");
  const message = userInput.value.trim();
@@ -265,6 +276,7 @@ button {
  });
  }
  </script>
+
  <footer style="
  text-align: center;
  padding: 12px;
@@ -272,7 +284,7 @@ button {
  font-size: 0.95rem;
  color: #555;
  position: fixed;
-bottom: 0;
+ bottom: 0;
  width: 100%;
  z-index: 0;
  backdrop-filter: blur(6px);
